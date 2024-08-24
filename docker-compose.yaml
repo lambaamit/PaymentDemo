@@ -1,0 +1,77 @@
+version: '3.8'
+services:
+    postgres:
+        image: postgres:15
+        container_name: postgres
+        environment:
+            POSTGRES_USER: amit
+            POSTGRES_PASSWORD: test123
+            POSTGRES_DB: mydb
+        ports:
+            - "5432:5432"
+        networks:
+            - app-network
+
+    zookeeper:
+        image: confluentinc/cp-zookeeper:7.4.0
+        container_name: zookeeper
+        environment:
+            ZOOKEEPER_CLIENT_PORT: 2181
+            ZOOKEEPER_TICK_TIME: 2000
+        ports:
+            - "2181:2181"
+        networks:
+            - app-network
+
+    kafka:
+        image: confluentinc/cp-kafka:7.4.0
+        container_name: kafka
+        environment:
+            KAFKA_BROKER_ID: 1
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+        ports:
+            - "9092:9092"
+        depends_on:
+            - zookeeper
+        networks:
+            - app-network
+    zipkin:
+        image: openzipkin/zipkin
+        ports:
+            - "9411:9411"
+
+    service1:
+        image: payment
+        build:
+            context: ./payment
+            dockerfile: Dockerfile
+        ports:
+            - "9132:9132"
+        depends_on:
+            - postgres
+            - kafka
+            - zipkin
+        networks:
+            - app-network
+
+    service2:
+        image: payment-core
+        build:
+            context: ./payment-core
+            dockerfile: Dockerfile
+        ports:
+            - "9131:9131"
+        depends_on:
+            - postgres
+            - kafka
+            - zipkin
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        driver: bridge
+
+

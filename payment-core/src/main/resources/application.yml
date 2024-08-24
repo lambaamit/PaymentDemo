@@ -1,0 +1,99 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://postgres:5432/mydb
+        username: amit
+        password: test123
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                temp:
+                    use_jdbc_metadata_defaults: false
+                    allow_jdbc_metadata_access: false
+                format_sql: true
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+        defer-datasource-initialization: true
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+    application:
+        name: payment
+    main:
+        allow-circular-references: true
+        allow-bean-definition-overriding: true
+    h2:
+        console:
+            enabled: true
+            path: /h2-console
+            settings:
+                trace: false
+                web-allow-others: false
+    kafka:
+        bootstrap-servers: kafka:9092
+        properties:
+            spring:
+                json:
+                    trusted:
+                        packages: '*'
+
+server:
+    servlet:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
+        context-path: /api/payment-core
+    port: 9131
+
+management:
+    zipkin:
+        tracing:
+            endpoint: http://zipkin:9411
+    tracing:
+        sampling:
+            probability: 1.0
+        enabled: true
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+        prometheus:
+            enabled: true
+    prometheus:
+        metrics:
+            export:
+                enabled: true
+
+
+kafka:
+    broker:
+        ip: kafka:9092
+
+springdoc:
+    api-docs:
+        path: /api-docs
+    swagger-ui:
+        path: /swagger-ui.html
+
+allowed:
+    origin: "*"
+
+jwt:
+    access:
+        public:
+            key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2P37NM/tzIYSgsE/JtiPeG4kIaV4vOa+CaauV9v/2CxbvmwxyYg8krnDrg1NvLsiqWYkwrkTPvG1P3oyZSEwXhYAjXyS5gRNq7VOWH+teGQKb1qqyNjml3ACr5hfoSzJoAKBrMVUds+Y82yq+SILpSDb28jmZ9DwhrxdSncIUekCN90WuB0vYsLCSZ8ArJgbl/pZ6DerH6xNJ6HOl2EqcuaAS3NWfIa/gnZ9MnD80XGdvrDrVvAB1NdcBhShBcEuMGoNxTiZp2MO6Inj/0gZ0mxp1cU9E9OCUaNdU8AF589imTuONrvsT5JqMgcsGdUV6N/+GxSQDuo2WkeTAdIlQwIDAQAB
+        private:
+            key: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDY/fs0z+3MhhKCwT8m2I94biQhpXi85r4Jpq5X2//YLFu+bDHJiDySucOuDU28uyKpZiTCuRM+8bU/ejJlITBeFgCNfJLmBE2rtU5Yf614ZApvWqrI2OaXcAKvmF+hLMmgAoGsxVR2z5jzbKr5IgulINvbyOZn0PCGvF1KdwhR6QI33Ra4HS9iwsJJnwCsmBuX+lnoN6sfrE0noc6XYSpy5oBLc1Z8hr+Cdn0ycPzRcZ2+sOtW8AHU11wGFKEFwS4wag3FOJmnYw7oieP/SBnSbGnVxT0T04JRo11TwAXnz2KZO442u+xPkmoyBywZ1RXo3/4bFJAO6jZaR5MB0iVDAgMBAAECggEABt+4e2dbNQmynbE5qwJcsST2+sdWg+ea/V4BXvY8WwxL9YoLV+YHN2KwYtvDwgbj9Ewwg5DRhp/Ap00haNUWl/o8dD721RH/GhLzc2lXStHc2PGoy+ccjux359vxNn88chICQc0j8h0IiXKpLstmfKyRh4QMLwZIazrMLE/PAntiHKFS8Qw4Hds1Uki/qlCyptGQWqdbadbe7qBBeMUuURQIdghEx6E6x6b+6eTRSmLNQjvOQr0rpgeFl0jF8n5OXQarKl+qEZd+5EDS4LESANgkSyv6bpWbb8vorVEdEepwZD6K4xEXikWn/PrzMcqv56I1mVfu0i3xcab62xXW+QKBgQD4MzSWN6LUiYGWAZ+Grkpw++hcEgw2PDIwMmPJmeKnYl2Wr43m2VdDojBf6K4FuKN2XO5Syc7N6Nm77BpwLAIhDQVMF4gsknUrQvkjgVu0hkQbJbkZZ5tPqcVd3sZ/1fivgu7NoGa6fbOnUIQKP9yqEwJYmsYvRkhiuGUwkS3ePwKBgQDfz7R+SAQxlkTlKT2YwbEOrC+ZE+puVxgiIbjpnMu3A0lUszlDqZLuqEkpNOZGqXUXH4kSt3YJRvi0y+DFmz4N8wH/Dv1OEOntuMT5S8m9HXBv6KKOuZaMf3rvEAtbE4CR3c9mAOhfa+oeTwSYktA/sjoLEq+6Dnnxi50zpzQ//QKBgQCEu52b2BUUZJUQi72sYPkegxk4Y850Eq0kaU5EOi+kJE64jxnsIr8wRERqhhzKonuIiRpK2/Hk3GnUvedFpcNduYDjuJHyhEB06lQiUMOiP0uc2QesNmQwrjIGiWTOaLed5P+gp+9IPIEfMUfr00tHCPNwPxVNouCDKumyl3FYMQKBgCypcCU7DcsvZ3QrdKVFEaYR6jWr6b43FxPIkvPbXDObLkj+stCzyCRj5KWabtFvA3Sn0Fyxy5YyWXMKtEH6prl14tIZFac8bNIJaxUscIeSlltemwHMOySyU7/c/ccg7ykskDSUvco86K0/q3Ue5vuu/zIyemqwdNkkuSwTk7OpAoGAeucedWal5Kb8Q9F0jfserFuMjtwOb9WkIQVbA/kjc8QBhHqxx+vp4od0yq+OpRQc/zgZZKxoTPjP5KxEC2zElD0CB3j3yxeVARZWOLwfzoy9ze9hAB9sQjEEGhCyHSN1ioVaM03hfpd1nNdJSYIap1OIvCv+KSrjCeb4VxApXN0=
+    refresh:
+        public:
+            key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvqgbNAdovvGEbzHwfMqb2r2qMBybpvagU8J2KnMIHpql+bJPAO4ieMREU063lR3OtJBFObkg8UZ/2ryN00tJBpu3Z9B8nPE9pWOaNVOT3Iagl+Wr4wS4z313o6M9uqfa+CG+pbxYz53/Qp2K1lF8pyxHNtpqE1e76/8CV8aOhIi1U73mdkIB2v0gfoJgkoYio00mVL8lf9P9KwssdcJWdSXE9KMotUP/QrI6OqGGTUq+KLzTIRaakZ6YYSQfFq5DeKXKO60yVX2qH9IEmrn54AhgC29it+j5wcFAUTkhht00xgWgUVzR7r2yMksVmzz/YlEEv67YqX4YxRELojJ5UQIDAQAB
+        private:
+            key: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC+qBs0B2i+8YRvMfB8ypvavaowHJum9qBTwnYqcwgemqX5sk8A7iJ4xERTTreVHc60kEU5uSDxRn/avI3TS0kGm7dn0Hyc8T2lY5o1U5PchqCX5avjBLjPfXejoz26p9r4Ib6lvFjPnf9CnYrWUXynLEc22moTV7vr/wJXxo6EiLVTveZ2QgHa/SB+gmCShiKjTSZUvyV/0/0rCyx1wlZ1JcT0oyi1Q/9Csjo6oYZNSr4ovNMhFpqRnphhJB8WrkN4pco7rTJVfaof0gSaufngCGALb2K36PnBwUBROSGG3TTGBaBRXNHuvbIySxWbPP9iUQS/rtipfhjFEQuiMnlRAgMBAAECggEAAJT9wB0U+/KKhe8Quih8j2zccmzOFdVVtOsiTGbpwv1iq/ldHqUWh0Yd8zNiLh7BJ4fWDy9Wn4o8OganIcuphM891y51/uvN/LxRY7/wAaG7pzCW2beATNjFc+9x9eQKefGMRfUhNjJrrYBSpxQtkA/sykQExBGyNFVRH4iCf9Np4FAlh765tcdYz6HWKCdUBS3A2r8nfVzKipCfUaFV9Tcb0vh/aDegfPXvWKCtIhGgw+xQITbzQAEuCfBMfi9RzJrfsLFjrUvGUgbUvOxmclJCzdOfsk0fBhPjshmfJG5a7i4utvDxwswKdiWGJETLrny7Ob4Jv95zl5GUdTRlxQKBgQD/OxbRpFPc1W8skTU+tnGy7jDUOtnuZrKoPAH42YLQCtfzadjwnbzdaZKJD1Qce3HBDOdNePIeEdEJ2YE1xXHAwR3v/jVO6jSQVX1nUOJndZKVrP67zyrRJa1UgVpCfePlfg48THY4oApUOCMocrtBDnmnuupe4ZXSWfuZZE0vTQKBgQC/OzK2XU3nWRm8b/qxm/hCRY5DiHMAP9+UHXWT2Z7E+l/ICkrBxVeF5EvEO/uNbyEuHL4mgqkFxdqkWndq7O1K1GVxBzQi0aTjagRMfmadLnhi4JyfOpPC0kcmd4oByc6+C/MxqPUnh5pBdl9ef6BlJ3xJV0+Se8hiJo0VGrf4FQKBgEoaieGMaJzxiznRXzg6GIDvD1ZPT/8b6jtWUOxDmut0eoa98LLL2Y4fnOAWh0FNxhVa/b1MpF9+pMbLU+ycyw5AA8UudaPX9DMD30kj/tgzFsBGXh+BYtkeq1ihxecQTh7Pnqp7OMfwD4+sTOjthti4rzG331x0+t78KUS8DnzxAoGALqkMI7E6jAOSowcTvXiYJ9t+7f2CSgJL1IEnqk7ETb3l1xKj0QoM5A+jaRtVstn116GNyCnDgjQXuFiWoNF0yPhwVBb04rYSrKa2q89/zESFfWLe9H8/hJ74W2t5khwixP53dZuLTfzpZ6WxeYZcpbHvwpl6QfzQFRrg+9BMKU0CgYEAtmQdtDCh6qanWwPqWVw6a94lvQ2U3Pkorc3g5LM4mewhX3LHlUq3bxqasbIIRzn0eLbzn70VQhL6gOt4zusWL4l2dsymP/yTwx+I/LCNe8eP+mfAjDnN7bANjlrX8gutsCfiH4FwCc6GacWNkWajxgLKAD/JPHmTqp/aR9+TOPQ=
+
+pii:
+    key: 3f$Si,nI@Ad;ENutGTUW~Ek<B!lWs2
+    initVector: BSonK88FyMYQGSAi
+    required: true
+
+domain-url: http://localhost:9132/
+#domain-url: https://lla-dev.finnomo.com:8443/
